@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 오늘의 아하!
 
-## Getting Started
+Next.js App Router, TypeScript, Tailwind CSS, Supabase PostgreSQL 기반의 생활 상식 퀴즈 MVP입니다.
 
-First, run the development server:
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+기본 주소는 `http://localhost:3000`입니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 환경변수
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env.local`에 아래 값을 설정하면 Supabase 데이터가 사용됩니다. 값이 없으면 로컬 샘플 데이터로 화면을 확인할 수 있습니다.
 
-## Learn More
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+ADMIN_PASSWORD=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Supabase 설정
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Supabase SQL Editor에서 `supabase/schema.sql`을 실행합니다.
+2. 개발 확인용 데이터가 필요하면 `supabase/seed.sql`을 실행합니다.
+3. 공개 퀴즈는 `is_published = true`이고 `published_at` 값이 있는 항목만 sitemap에 포함됩니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 구현된 페이지
 
-## Deploy on Vercel
+- `/`: 메인, 오늘의 퀴즈, 인기/최신 퀴즈, 카테고리
+- `/today`: 날짜 기반 deterministic 오늘의 퀴즈
+- `/quiz`: 전체 퀴즈 목록, 카테고리/난이도 필터용 구조
+- `/quiz/[slug]`: 고유 URL, 퀴즈 풀이, 정답 표시, 자세한 해설, JSON-LD, 관련 퀴즈
+- `/category/[slug]`: 카테고리별 퀴즈
+- `/search`: 제목, 질문, 태그, 요약 기반 검색
+- `/bookmarks`: localStorage 기반 북마크
+- `/about`, `/privacy`, `/terms`, `/contact`
+- `/admin`, `/admin/quizzes`, `/admin/quizzes/new`, `/admin/quizzes/[id]/edit`, `/admin/categories`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## SEO와 광고
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `generateMetadata`로 퀴즈별 title/description/canonical을 생성합니다.
+- `src/app/sitemap.ts`와 `src/app/robots.ts`로 동적 sitemap.xml, robots.txt를 제공합니다.
+- `AdSlot` 컴포넌트는 실제 광고 코드 없이 배치 위치만 제공합니다. 퀴즈 선택 버튼 바로 아래에는 광고를 두지 않았습니다.
+
+## 관리자 MVP
+
+관리자 화면은 초기 구조와 폼 UI만 제공합니다. 운영 배포 전에는 `ADMIN_PASSWORD` 또는 Supabase Auth를 이용한 서버 측 보호와 실제 insert/update 액션을 연결하세요.
