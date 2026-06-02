@@ -1,4 +1,4 @@
-export type QuizType = "OX" | "MULTIPLE";
+export type QuizType = "TRUE_FALSE";
 export type Difficulty = "easy" | "normal" | "hard";
 
 export type Category = {
@@ -14,6 +14,7 @@ export type Quiz = {
   slug: string;
   title: string;
   question: string;
+  statement?: string;
   quiz_type: QuizType;
   option_1: string;
   option_2: string;
@@ -30,10 +31,13 @@ export type Quiz = {
   category?: Category;
   difficulty: Difficulty;
   reading_time: number;
-  time_limit_seconds: number;
+  time_limit_seconds?: number | null;
   tags: string[];
   seo_title?: string | null;
   seo_description?: string | null;
+  interesting_count?: number | null;
+  is_popular?: boolean | null;
+  popular_score?: number | null;
   view_count: number;
   is_published: boolean;
   published_at: string;

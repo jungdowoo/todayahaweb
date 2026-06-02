@@ -10,23 +10,22 @@ import type { Quiz } from "@/types/quiz";
 
 type QuizDetailExperienceProps = {
   quiz: Quiz;
-  next: Quiz | null;
   related: Quiz[];
 };
 
-const detailPreferenceKey = "todayaha:show-detail-after-answer";
+const summaryPreferenceKey = "todayaha:show-summary-after-answer";
 
-export function QuizDetailExperience({ quiz, next, related }: QuizDetailExperienceProps) {
+export function QuizDetailExperience({ quiz, related }: QuizDetailExperienceProps) {
   const [answered, setAnswered] = useState(false);
-  const [showDetails, setShowDetails] = useState(() => {
+  const [showSummary, setShowSummary] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.localStorage.getItem(detailPreferenceKey) === "true";
+    return window.localStorage.getItem(summaryPreferenceKey) === "true";
   });
 
-  const toggleDetails = () => {
-    const nextValue = !showDetails;
-    setShowDetails(nextValue);
-    window.localStorage.setItem(detailPreferenceKey, String(nextValue));
+  const toggleSummary = () => {
+    const nextValue = !showSummary;
+    setShowSummary(nextValue);
+    window.localStorage.setItem(summaryPreferenceKey, String(nextValue));
   };
 
   return (
@@ -37,16 +36,16 @@ export function QuizDetailExperience({ quiz, next, related }: QuizDetailExperien
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
-            onClick={toggleDetails}
+            onClick={toggleSummary}
             className="inline-flex min-h-[3.25rem] w-full items-center justify-center rounded-2xl bg-slate-900 px-6 py-3 font-black text-white shadow-sm transition hover:bg-slate-800 sm:w-auto dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"
           >
-            {showDetails ? "자세한 설명 숨기기" : "자세한 설명 보기"}
+            {showSummary ? "쉬운 요약 숨기기" : "쉬운 요약 보기"}
           </button>
-          <NextQuizButton quiz={next} compact />
+          <NextQuizButton currentSlug={quiz.slug} compact />
         </div>
       )}
 
-      {answered && showDetails && <ExplanationBlock quiz={quiz} />}
+      {answered && showSummary && <ExplanationBlock quiz={quiz} />}
 
       {answered && (
         <>

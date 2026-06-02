@@ -13,11 +13,15 @@ export function BookmarkList({ quizzes }: { quizzes: Quiz[] }) {
   const bookmarked = quizzes.filter((quiz) => slugs.includes(quiz.slug));
 
   if (!bookmarked.length) {
-    return <p className="mt-8 rounded-lg bg-slate-50 p-6 text-slate-600">저장한 퀴즈가 아직 없습니다.</p>;
+    return (
+      <p className="mt-8 rounded-[28px] border border-slate-200/60 bg-white/70 p-8 text-center text-sm font-semibold text-slate-500 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-900/40 dark:text-slate-400">
+        저장한 퀴즈가 아직 없습니다.
+      </p>
+    );
   }
 
   return (
-    <div className="mt-6 grid gap-4 md:grid-cols-3">
+    <div className="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
       {bookmarked.map((quiz) => (
         <QuizCard key={quiz.id} quiz={quiz} />
       ))}

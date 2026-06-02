@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { QuizDetailExperience } from "@/components/QuizDetailExperience";
-import { getNextQuiz, getPublishedQuizzes, getQuizBySlug, getRelatedQuizzes } from "@/lib/quizzes";
+import { getPublishedQuizzes, getQuizBySlug, getRelatedQuizzes } from "@/lib/quizzes";
 import { absoluteUrl, quizJsonLd } from "@/lib/seo";
 import { difficultyLabel } from "@/lib/utils";
 
@@ -33,7 +33,7 @@ export default async function QuizDetailPage({ params }: { params: Promise<{ slu
   const quiz = await getQuizBySlug(slug);
   if (!quiz) notFound();
 
-  const [related, next] = await Promise.all([getRelatedQuizzes(quiz), getNextQuiz(quiz)]);
+  const related = await getRelatedQuizzes(quiz);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-16">
@@ -44,8 +44,11 @@ export default async function QuizDetailPage({ params }: { params: Promise<{ slu
         <span className="rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">예상 {quiz.reading_time}분</span>
       </div>
       <h1 className="mt-6 text-3xl font-black leading-tight text-slate-950 sm:text-4xl dark:text-white">{quiz.title}</h1>
+      <p className="mt-3 text-base font-semibold leading-relaxed text-slate-500 dark:text-slate-400">
+        정답을 맞혀보고, 아래에서 쉬운 요약을 확인해보세요.
+      </p>
       <div className="mt-8">
-        <QuizDetailExperience key={quiz.slug} quiz={quiz} next={next} related={related} />
+        <QuizDetailExperience key={quiz.slug} quiz={quiz} related={related} />
       </div>
     </article>
   );

@@ -17,8 +17,8 @@ export default async function AdminCategoriesPage() {
         </button>
       </form>
       <div className="mt-6 grid gap-3">
-        {categories.map((category) => (
-          <div key={category.id} className="rounded-lg border border-slate-200 p-4">
+        {categories.map((category, index) => (
+          <div key={`${category.id}-${index}`} className="rounded-lg border border-slate-200 p-4">
             <p className="font-black">{category.name}</p>
             <p className="text-sm text-slate-500">/{category.slug}</p>
             <p className="mt-2 text-sm text-slate-600">{category.description}</p>

@@ -1,4 +1,5 @@
 import { categories as fallbackCategories, quizzes as fallbackQuizzes } from "@/lib/sampleData";
+import { connection } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabaseClient";
 import type { Category, Quiz } from "@/types/quiz";
 
@@ -6,17 +7,27 @@ const slugAliases: Record<string, string> = {
   "coffee-sleep": "coffee-sleep-caffeine",
 };
 
-const withCategory = (quiz: Quiz): Quiz => ({
-  ...quiz,
-  category: quiz.category ?? fallbackCategories.find((category) => category.id === quiz.category_id),
-});
+const withCategory = (quiz: Quiz): Quiz =>
+  ({
+    ...quiz,
+    question: quiz.statement ?? quiz.question,
+    quiz_type: "TRUE_FALSE",
+    option_1: "진실",
+    option_2: "거짓",
+    option_3: null,
+    option_4: null,
+    category: quiz.category ?? fallbackCategories.find((category) => category.id === quiz.category_id),
+  });
+
+const uniqueCategories = (categories: Category[]): Category[] =>
+  Array.from(new Map(categories.map((category) => [category.id, category])).values());
 
 export async function getCategories(): Promise<Category[]> {
   const supabase = getSupabaseServerClient();
-  if (!supabase) return fallbackCategories;
+  if (!supabase) return uniqueCategories(fallbackCategories);
 
   const { data, error } = await supabase.from("categories").select("*").order("name");
-  return error || !data?.length ? fallbackCategories : data;
+  return uniqueCategories(error || !data?.length ? fallbackCategories : data);
 }
 
 export async function getPublishedQuizzes(): Promise<Quiz[]> {
@@ -31,6 +42,10 @@ export async function getPublishedQuizzes(): Promise<Quiz[]> {
 
   return error || !data?.length ? fallbackQuizzes : (data as Quiz[]).map(withCategory);
 }
+
+const interestingCountOf = (quiz: Quiz) => Number(quiz.interesting_count ?? 0);
+const popularScoreOf = (quiz: Quiz) => Number(quiz.popular_score ?? 0);
+const isPopularQuiz = (quiz: Quiz) => Boolean(quiz.is_popular) || interestingCountOf(quiz) >= 100;
 
 export async function getQuizBySlug(slug: string): Promise<Quiz | null> {
   const normalizedSlug = slugAliases[slug] ?? slug;
@@ -72,29 +87,6 @@ export async function getQuizzesByCategory(slug: string): Promise<Quiz[]> {
   return quizzes.filter((quiz) => quiz.category?.slug === slug || quiz.category_id === category?.id);
 }
 
-export async function searchQuizzes(query: string): Promise<Quiz[]> {
-  const term = query.trim().toLowerCase();
-  if (!term) return [];
-
-  const supabase = getSupabaseServerClient();
-  if (supabase) {
-    const pattern = `%${term}%`;
-    const { data } = await supabase
-      .from("quizzes")
-      .select("*, category:categories(*)")
-      .eq("is_published", true)
-      .or(`title.ilike.${pattern},question.ilike.${pattern},short_explanation.ilike.${pattern}`);
-    if (data?.length) return (data as Quiz[]).map(withCategory);
-  }
-
-  return fallbackQuizzes.filter((quiz) =>
-    [quiz.title, quiz.question, quiz.short_explanation, quiz.aha_point, quiz.tags.join(" ")]
-      .join(" ")
-      .toLowerCase()
-      .includes(term),
-  );
-}
-
 export async function getRelatedQuizzes(quiz: Quiz, limit = 3): Promise<Quiz[]> {
   const quizzes = await getPublishedQuizzes();
   return quizzes
@@ -111,24 +103,32 @@ export async function getRelatedQuizzes(quiz: Quiz, limit = 3): Promise<Quiz[]> 
 }
 
 export async function getNextQuiz(current: Quiz): Promise<Quiz | null> {
-  const related = await getRelatedQuizzes(current, 1);
-  if (related[0]) return related[0];
-
+  await connection();
   const quizzes = await getPublishedQuizzes();
-  return quizzes.find((quiz) => quiz.slug !== current.slug) ?? null;
+  const candidates = quizzes.filter((quiz) => quiz.slug !== current.slug);
+  if (!candidates.length) return null;
+
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 export async function getTodayQuiz(): Promise<Quiz | null> {
+  await connection();
   const quizzes = await getPublishedQuizzes();
   if (!quizzes.length) return null;
 
-  const today = new Date();
-  const seed = Number(`${today.getUTCFullYear()}${today.getUTCMonth() + 1}${today.getUTCDate()}`);
-  return quizzes[seed % quizzes.length];
+  return quizzes[Math.floor(Math.random() * quizzes.length)];
 }
 
 export const getPopularQuizzes = async (limit = 6) =>
-  (await getPublishedQuizzes()).sort((a, b) => b.view_count - a.view_count).slice(0, limit);
+  (await getPublishedQuizzes())
+    .sort(
+      (a, b) =>
+        Number(isPopularQuiz(b)) - Number(isPopularQuiz(a)) ||
+        interestingCountOf(b) - interestingCountOf(a) ||
+        popularScoreOf(b) - popularScoreOf(a) ||
+        b.view_count - a.view_count,
+    )
+    .slice(0, limit);
 
 export const getLatestQuizzes = async (limit = 6) =>
   (await getPublishedQuizzes())

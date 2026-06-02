@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
-:root {
-  --background: #f8fafc; /* slate-50 */
-  --foreground: #1e293b; /* slate-800 */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a; /* slate-900 */
-    --foreground: #f1f5f9; /* slate-100 */
-  }
+:root {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+}
+
+.dark {
+  --background: #090d16; /* deep premium navy-dark background */
+  --foreground: #f8fafc; /* slate-50 */
 }
 
 @theme inline {
@@ -22,6 +26,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s;
 }
 
 a,

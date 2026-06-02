@@ -1,5 +1,6 @@
-import type { Quiz } from "@/types/quiz";
+import type { ReactNode } from "react";
 import { AdSlot } from "@/components/AdSlot";
+import type { Quiz } from "@/types/quiz";
 
 function splitParagraphs(text: string) {
   const normalized = text.replace(/\s+/g, " ").trim();
@@ -17,59 +18,44 @@ function splitParagraphs(text: string) {
   return paragraphs;
 }
 
-function TextCard({
-  title,
-  children,
-  tone = "default",
-}: {
-  title: string;
-  children: React.ReactNode;
-  tone?: "default" | "amber" | "emerald";
-}) {
-  const toneClass = {
-    default: "bg-white ring-slate-200 dark:bg-slate-900 dark:ring-slate-800",
-    amber: "bg-amber-50 ring-amber-200 dark:bg-amber-950/20 dark:ring-amber-900/50",
-    emerald: "bg-emerald-50 ring-emerald-200 dark:bg-emerald-950/30 dark:ring-emerald-900/50",
-  }[tone];
-
+function TextCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className={`rounded-2xl p-6 shadow-sm ring-1 sm:p-7 ${toneClass}`}>
-      <h2 className="text-xl font-black text-slate-950 dark:text-white">{title}</h2>
-      <div className="mt-4 space-y-4 text-base leading-8 text-slate-700 dark:text-slate-300">{children}</div>
+    <section className="rounded-[28px] bg-emerald-50/20 p-6 shadow-sm ring-1 ring-emerald-500/10 backdrop-blur-sm transition-all duration-300 hover:shadow-md hover:ring-emerald-500/20 sm:p-8 dark:bg-emerald-950/5 dark:ring-emerald-500/10">
+      <h3 className="flex items-center gap-2 text-lg font-black tracking-tight text-slate-950 dark:text-white">
+        <svg
+          className="h-5 w-5 text-emerald-600 dark:text-emerald-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2.5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+          />
+        </svg>
+        {title}
+      </h3>
+      <div className="mt-4 space-y-4 text-base font-semibold leading-8 text-slate-700 dark:text-slate-300">
+        {children}
+      </div>
     </section>
   );
 }
 
 export function ExplanationBlock({ quiz }: { quiz: Quiz }) {
-  const fullExplanation = splitParagraphs(quiz.full_explanation);
+  const easyExplanation = splitParagraphs(quiz.full_explanation);
 
   return (
-    <section className="mt-8 space-y-6" aria-label="자세한 설명">
-      <TextCard title="쉬운 해설">
-        {fullExplanation.map((paragraph) => (
+    <section className="mt-8 space-y-6" aria-label="쉬운 요약">
+      <TextCard title="쉬운 요약">
+        {easyExplanation.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
       </TextCard>
 
-      <AdSlot label="해설 아래 광고 영역" />
-
-      <div className="grid gap-5 md:grid-cols-2">
-        {quiz.example_text && (
-          <TextCard title="생활 속 예시">
-            {splitParagraphs(quiz.example_text).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </TextCard>
-        )}
-
-        {quiz.misconception_text && (
-          <TextCard title="흔한 오해" tone="amber">
-            {splitParagraphs(quiz.misconception_text).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </TextCard>
-        )}
-      </div>
+      <AdSlot label="요약 아래 광고 영역" />
     </section>
   );
 }

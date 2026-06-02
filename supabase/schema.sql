@@ -31,6 +31,9 @@ create table if not exists public.quizzes (
   tags text[] default '{}',
   seo_title text,
   seo_description text,
+  interesting_count integer not null default 0,
+  is_popular boolean not null default false,
+  popular_score integer not null default 0,
   view_count integer default 0,
   is_published boolean default false,
   published_at timestamptz,
@@ -46,9 +49,14 @@ create table if not exists public.quiz_attempts (
   created_at timestamptz default now()
 );
 
+alter table public.quizzes add column if not exists interesting_count integer not null default 0;
+alter table public.quizzes add column if not exists is_popular boolean not null default false;
+alter table public.quizzes add column if not exists popular_score integer not null default 0;
+
 create index if not exists quizzes_published_at_idx on public.quizzes (published_at desc) where is_published = true;
 create index if not exists quizzes_category_idx on public.quizzes (category_id);
 create index if not exists quizzes_tags_idx on public.quizzes using gin (tags);
+create index if not exists quizzes_interesting_idx on public.quizzes (interesting_count desc, popular_score desc) where is_published = true;
 
 alter table public.categories enable row level security;
 alter table public.quizzes enable row level security;
@@ -57,3 +65,21 @@ alter table public.quiz_attempts enable row level security;
 create policy "Public can read categories" on public.categories for select using (true);
 create policy "Public can read published quizzes" on public.quizzes for select using (is_published = true);
 create policy "Public can create anonymous attempts" on public.quiz_attempts for insert with check (true);
+
+create or replace function public.increment_quiz_interesting(target_quiz_id uuid)
+returns table(interesting_count integer, is_popular boolean, popular_score integer)
+language sql
+security definer
+set search_path = public
+as $$
+  update public.quizzes
+  set
+    interesting_count = coalesce(public.quizzes.interesting_count, 0) + 1,
+    is_popular = coalesce(public.quizzes.interesting_count, 0) + 1 >= 100,
+    popular_score = greatest(coalesce(public.quizzes.popular_score, 0), coalesce(public.quizzes.interesting_count, 0) + 1),
+    updated_at = now()
+  where public.quizzes.id = target_quiz_id
+  returning public.quizzes.interesting_count, public.quizzes.is_popular, public.quizzes.popular_score;
+$$;
+
+grant execute on function public.increment_quiz_interesting(uuid) to anon, authenticated;

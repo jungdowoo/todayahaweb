@@ -2,19 +2,18 @@ import part1 from "../../quiz-seed-part-1.json";
 import part2 from "../../quiz-seed-part-2.json";
 import part3 from "../../quiz-seed-part-3.json";
 import part4 from "../../quiz-seed-part-4.json";
-import type { Category, Difficulty, Quiz, QuizType } from "@/types/quiz";
+import type { Category, Difficulty, Quiz } from "@/types/quiz";
 
 type SeedQuiz = {
   category: string;
-  type: "OX" | "MULTIPLE_CHOICE";
+  type: "TRUE_FALSE";
   difficulty: string;
   estimatedReadTime: number;
-  timeLimitSeconds?: number;
   slug: string;
   seoTitle: string;
   seoDescription: string;
   title: string;
-  question: string;
+  statement: string;
   options: string[];
   answer: string;
   shortAnswer: string;
@@ -24,6 +23,9 @@ type SeedQuiz = {
   commonMisunderstanding: string;
   ahaSummary: string;
   keywords: string[];
+  interestingCount?: number;
+  isPopular?: boolean;
+  popularScore?: number;
   relatedQuizSlugs: string[];
 };
 
@@ -48,6 +50,12 @@ const categoryMap: Record<string, Category> = {
     slug: "science",
     description: "하늘, 빛, 물, 소리처럼 익숙한 현상의 과학 원리를 설명합니다.",
   },
+  "과학/자연": {
+    id: "science",
+    name: "과학/자연",
+    slug: "science",
+    description: "하늘, 빛, 물, 소리처럼 익숙한 자연 현상을 쉽게 설명합니다.",
+  },
   동물: {
     id: "animals",
     name: "동물",
@@ -58,7 +66,7 @@ const categoryMap: Record<string, Category> = {
     id: "history-culture",
     name: "역사/문화",
     slug: "history-culture",
-    description: "옛 생활, 발명, 문화에 관한 흥미로운 상식을 모았습니다.",
+    description: "옛날 이야기와 문화 속에 숨어 있는 흥미로운 사실을 다룹니다.",
   },
 };
 
@@ -68,20 +76,21 @@ const difficultyMap: Record<string, Difficulty> = {
   어려움: "hard",
 };
 
-const toQuizType = (type: SeedQuiz["type"]): QuizType => (type === "OX" ? "OX" : "MULTIPLE");
-
-export const categories: Category[] = Object.values(categoryMap);
+export const categories: Category[] = Array.from(
+  new Map(Object.values(categoryMap).map((category) => [category.id, category])).values(),
+);
 
 export const quizzes: Quiz[] = seedQuizzes.map((seed, index) => {
   const category = categoryMap[seed.category] ?? categoryMap["생활"];
-  const [option1 = "O", option2 = "X", option3 = null, option4 = null] = seed.options;
+  const [option1 = "", option2 = "", option3 = "", option4 = ""] = seed.options;
 
   return {
     id: `seed-${index + 1}`,
     slug: seed.slug,
     title: seed.title,
-    question: seed.question,
-    quiz_type: toQuizType(seed.type),
+    question: seed.statement,
+    statement: seed.statement,
+    quiz_type: "TRUE_FALSE",
     option_1: option1,
     option_2: option2,
     option_3: option3,
@@ -97,10 +106,13 @@ export const quizzes: Quiz[] = seedQuizzes.map((seed, index) => {
     category,
     difficulty: difficultyMap[seed.difficulty] ?? "easy",
     reading_time: seed.estimatedReadTime,
-    time_limit_seconds: seed.timeLimitSeconds ?? 10,
+    time_limit_seconds: null,
     tags: seed.keywords,
     seo_title: `${seed.seoTitle} | 오늘의 아하!`,
     seo_description: seed.seoDescription,
+    interesting_count: seed.interestingCount ?? 0,
+    is_popular: seed.isPopular ?? false,
+    popular_score: seed.popularScore ?? 0,
     view_count: 2000 - index * 3,
     is_published: true,
     published_at: new Date(Date.UTC(2026, 0, 1 + index)).toISOString(),

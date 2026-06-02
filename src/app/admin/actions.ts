@@ -21,13 +21,15 @@ const tags = (formData: FormData) =>
     .filter(Boolean);
 
 function quizPayload(formData: FormData) {
+  const title = text(formData, "title");
+
   return {
     slug: text(formData, "slug"),
-    title: text(formData, "title"),
+    title,
     question: text(formData, "question"),
-    quiz_type: text(formData, "quiz_type") || "MULTIPLE",
-    option_1: text(formData, "option_1"),
-    option_2: text(formData, "option_2"),
+    quiz_type: "TRUE_FALSE",
+    option_1: text(formData, "option_1") || "진실",
+    option_2: text(formData, "option_2") || "거짓",
     option_3: nullable(formData, "option_3"),
     option_4: nullable(formData, "option_4"),
     correct_answer: text(formData, "correct_answer"),
