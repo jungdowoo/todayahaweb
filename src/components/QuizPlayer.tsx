@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Quiz } from "@/types/quiz";
 import { quizOptions } from "@/lib/utils";
 import { getSupabaseBrowserClient } from "@/lib/supabaseClient";
+import { rememberPlayedQuiz } from "@/lib/playedQuizzes";
 
 // Import modular components
 import { InterestingButton } from "@/components/InterestingButton";
+import { NextQuizButton } from "@/components/NextQuizButton";
 import { QuizQuestionCard } from "@/components/QuizQuestionCard";
 import { QuizOptionButton } from "@/components/QuizOptionButton";
 import { QuizResultBox } from "@/components/QuizResultBox";
@@ -42,6 +44,7 @@ export function QuizPlayer({ quiz, onAnswered }: QuizPlayerProps) {
     if (answered) return;
 
     setSelected(option);
+    rememberPlayedQuiz(quiz.slug);
 
     const supabase = getSupabaseBrowserClient();
     if (supabase) {
@@ -74,7 +77,22 @@ export function QuizPlayer({ quiz, onAnswered }: QuizPlayerProps) {
       />
 
       {/* 2. Quiz recommendation */}
-      <InterestingButton quiz={quiz} />
+      <InterestingButton
+        quiz={quiz}
+        actions={
+          <>
+            {answered && (
+              <a
+                href="#answer-guide"
+                className="inline-flex min-h-[2.75rem] w-full items-center justify-center rounded-xl border border-slate-200/80 bg-white px-4 py-2 text-sm font-black text-slate-900 shadow-sm transition hover:bg-slate-50 active:scale-95 dark:border-slate-800/80 dark:bg-slate-950 dark:text-white dark:hover:bg-slate-900 sm:w-auto"
+              >
+                정답과 해설 보기
+              </a>
+            )}
+            <NextQuizButton currentSlug={quiz.slug} compact />
+          </>
+        }
+      />
 
       {/* 3. Options choice grid */}
       <div className="grid gap-3 sm:gap-4">

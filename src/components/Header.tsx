@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useTheme } from "@/components/ThemeProvider";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const navItems = [
   ["오늘 퀴즈", "/today"],
@@ -15,26 +15,28 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = window.setTimeout(() => setMounted(true), 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const toggleTheme = () => {
-    if (theme === "system") {
-      setTheme("light");
-    } else if (theme === "light") {
-      setTheme("dark");
-    } else {
-      setTheme("system");
-    }
+    if (theme === "system") setTheme("light");
+    else if (theme === "light") setTheme("dark");
+    else setTheme("system");
   };
 
+  const themeLabel = theme === "system" ? "시스템 기본" : theme === "light" ? "라이트" : "다크";
+
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur-md dark:border-slate-800/60 dark:bg-slate-900/80 transition-all duration-300">
+    <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur-md transition-all duration-300 dark:border-slate-800/60 dark:bg-slate-900/80">
       <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link href="/" className="text-xl font-black tracking-tight text-slate-950 dark:text-white" aria-label="오늘의 아하 홈">
-          오늘의 <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-300">아하!</span>
+          오늘의{" "}
+          <span className="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-300">
+            아하!
+          </span>
         </Link>
-        
+
         <div className="flex items-center gap-2">
           <nav className="flex items-center gap-1 text-sm font-bold text-slate-700 dark:text-slate-300">
             {navItems.map(([label, href]) => (
@@ -44,19 +46,17 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1" />
+          <div className="mx-1 h-6 w-px bg-slate-200 dark:bg-slate-800" />
 
-          {/* Theme Switcher Button */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="group relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition hover:bg-slate-50 active:scale-95 dark:border-slate-800/80 dark:bg-slate-950 dark:hover:bg-slate-900 cursor-pointer"
+            className="group relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/60 bg-white shadow-sm transition hover:bg-slate-50 active:scale-95 dark:border-slate-800/80 dark:bg-slate-950 dark:hover:bg-slate-900"
             aria-label="화면 테마 전환"
-            title={`현재 테마: ${theme === "system" ? "시스템 기본" : theme === "light" ? "라이트" : "다크"}`}
+            title={`현재 테마: ${themeLabel}`}
           >
             {mounted ? (
-              <div className="relative h-5 w-5 transition-transform duration-300 group-hover:scale-105">
-                {/* Sun icon */}
+              <span className="relative h-5 w-5 transition-transform duration-300 group-hover:scale-105">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -66,40 +66,39 @@ export function Header() {
                   className={`absolute inset-0 h-5 w-5 text-amber-500 transition-all duration-300 ${
                     theme === "light" ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
                   }`}
+                  aria-hidden="true"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
                 </svg>
-
-                {/* Moon icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="2.5"
                   stroke="currentColor"
-                  className={`absolute inset-0 h-5 w-5 text-indigo-500 dark:text-indigo-400 transition-all duration-300 ${
+                  className={`absolute inset-0 h-5 w-5 text-indigo-500 transition-all duration-300 dark:text-indigo-400 ${
                     theme === "dark" ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
                   }`}
+                  aria-hidden="true"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
                 </svg>
-
-                {/* System Monitor icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="2.5"
                   stroke="currentColor"
-                  className={`absolute inset-0 h-5 w-5 text-slate-500 dark:text-slate-400 transition-all duration-300 ${
+                  className={`absolute inset-0 h-5 w-5 text-slate-500 transition-all duration-300 dark:text-slate-400 ${
                     theme === "system" ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
                   }`}
+                  aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25a2.25 2.25 0 0 1-2.25-2.25V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25A2.25 2.25 0 0 1 5.25 3h13.5A2.25 2.25 0 0 1 21 5.25Z" />
                 </svg>
-              </div>
+              </span>
             ) : (
-              <div className="h-5 w-5 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              <span className="h-5 w-5 rounded-full bg-slate-100 dark:bg-slate-800" />
             )}
           </button>
         </div>

@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { AdSlot } from "@/components/AdSlot";
 import type { Quiz } from "@/types/quiz";
 
-function splitParagraphs(text: string) {
-  const normalized = text.replace(/\s+/g, " ").trim();
+function splitParagraphs(text?: string | null) {
+  const normalized = text?.replace(/\s+/g, " ").trim();
   if (!normalized) return [];
 
   const sentences = normalized.match(/[^.!?。！？]+[.!?。！？]?/g)?.map((item) => item.trim()).filter(Boolean) ?? [
@@ -46,14 +46,58 @@ function TextCard({ title, children }: { title: string; children: ReactNode }) {
 
 export function ExplanationBlock({ quiz }: { quiz: Quiz }) {
   const easyExplanation = splitParagraphs(quiz.full_explanation);
+  const detailExplanation = splitParagraphs(quiz.detail_explanation);
+  const exampleText = splitParagraphs(quiz.example_text);
+  const misconceptionText = splitParagraphs(quiz.misconception_text);
 
   return (
-    <section className="mt-8 space-y-6" aria-label="쉬운 요약">
+    <section id="answer-guide" className="mt-10 scroll-mt-24 space-y-6" aria-label="정답과 해설">
+      <div className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-800/80 dark:bg-slate-900/60">
+        <p className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+          정답과 핵심
+        </p>
+        <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
+          정답은 {quiz.correct_answer}입니다.
+        </h2>
+        <p className="mt-4 text-base font-semibold leading-8 text-slate-700 dark:text-slate-300">
+          {quiz.short_explanation}
+        </p>
+        {quiz.aha_point && (
+          <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm font-bold leading-7 text-slate-600 dark:bg-slate-950/50 dark:text-slate-300">
+            {quiz.aha_point}
+          </p>
+        )}
+      </div>
+
       <TextCard title="쉬운 요약">
         {easyExplanation.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
       </TextCard>
+
+      {detailExplanation.length > 0 && (
+        <TextCard title="자세한 해설">
+          {detailExplanation.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </TextCard>
+      )}
+
+      {exampleText.length > 0 && (
+        <TextCard title="생활 속 예시">
+          {exampleText.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </TextCard>
+      )}
+
+      {misconceptionText.length > 0 && (
+        <TextCard title="흔한 오해">
+          {misconceptionText.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </TextCard>
+      )}
 
       <AdSlot label="요약 아래 광고 영역" />
     </section>

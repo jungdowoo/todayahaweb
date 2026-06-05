@@ -1,4 +1,4 @@
-import { categories as fallbackCategories, quizzes as fallbackQuizzes } from "@/lib/sampleData";
+import { categories as fallbackCategories, getEnhancedDetailExplanation, quizzes as fallbackQuizzes } from "@/lib/sampleData";
 import { connection } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabaseClient";
 import type { Category, Quiz } from "@/types/quiz";
@@ -16,6 +16,7 @@ const withCategory = (quiz: Quiz): Quiz =>
     option_2: "거짓",
     option_3: null,
     option_4: null,
+    detail_explanation: getEnhancedDetailExplanation(quiz.slug, quiz.detail_explanation),
     category: quiz.category ?? fallbackCategories.find((category) => category.id === quiz.category_id),
   });
 

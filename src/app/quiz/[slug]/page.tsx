@@ -45,7 +45,7 @@ export default async function QuizDetailPage({ params }: { params: Promise<{ slu
       </div>
       <h1 className="mt-6 text-3xl font-black leading-tight text-slate-950 sm:text-4xl dark:text-white">{quiz.title}</h1>
       <p className="mt-3 text-base font-semibold leading-relaxed text-slate-500 dark:text-slate-400">
-        정답을 맞혀보고, 아래에서 쉬운 요약을 확인해보세요.
+        먼저 정답을 골라보세요. 선택한 뒤 정답과 해설이 열립니다.
       </p>
       <div className="mt-8">
         <QuizDetailExperience key={quiz.slug} quiz={quiz} related={related} />

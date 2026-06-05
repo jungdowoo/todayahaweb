@@ -6,12 +6,15 @@ export function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    // Check localStorage on client-side to avoid hydration mismatch
-    const key = "todayaha:cookie-consented";
-    const consented = localStorage.getItem(key);
-    if (!consented) {
-      setShowBanner(true);
-    }
+    const timer = window.setTimeout(() => {
+      const key = "todayaha:cookie-consented";
+      const consented = localStorage.getItem(key);
+      if (!consented) {
+        setShowBanner(true);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const handleAccept = () => {

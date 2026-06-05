@@ -1,102 +1,92 @@
+import { siteConfig } from "@/lib/seo";
+
 export const metadata = {
-  title: "오늘의 아하! 소개",
-  description: "매일 푸는 흥미진진한 생활 상식 퀴즈 서비스 '오늘의 아하!'를 소개합니다. 카테고리 구성 및 기획 의도를 확인해 보세요.",
+  title: "오늘의 아하 소개",
+  description: "오늘의 아하가 어떤 기준으로 생활 상식 퀴즈를 만들고 운영하는지 소개합니다.",
 };
+
+const principles = [
+  {
+    title: "일상 속 오해를 다룹니다",
+    body: "전문 시험 지식보다 사람들이 평소에 자주 헷갈리는 생활 상식, 음식, 동물, 자연 현상, 역사 문화 이야기를 진실/거짓 퀴즈로 정리합니다.",
+  },
+  {
+    title: "짧지만 근거 있게 설명합니다",
+    body: "정답만 보여주는 데서 끝내지 않고, 왜 그런 오해가 생겼는지와 실제 원리를 함께 설명해 사용자가 스스로 이해할 수 있게 구성합니다.",
+  },
+  {
+    title: "정정 가능한 콘텐츠로 운영합니다",
+    body: "상식 콘텐츠도 새 자료나 표현 방식에 따라 보완이 필요할 수 있습니다. 오류 제보가 들어오면 확인 후 수정하는 것을 원칙으로 합니다.",
+  },
+];
+
+const categories = [
+  ["생활", "건강 습관, 집안일, 안전, 디지털 사용처럼 매일 마주치는 오해를 다룹니다."],
+  ["음식", "재료, 조리, 보관, 영양과 관련해 흔히 잘못 알려진 이야기를 다룹니다."],
+  ["동물", "반려동물과 야생동물의 행동, 생태, 분류에 관한 재미있는 사실을 다룹니다."],
+  ["과학/자연", "날씨, 빛, 물, 전기, 우주처럼 주변 현상에 숨어 있는 원리를 다룹니다."],
+  ["역사/문화", "발명, 문자, 유적, 문화권에 관한 널리 퍼진 오해와 배경을 다룹니다."],
+];
 
 export default function AboutPage() {
   return (
-    <article className="mx-auto max-w-4xl px-4 py-12 md:py-20">
-      {/* 1. Page Header with gradient background */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-700 p-8 text-white shadow-lg sm:p-12">
-        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-        <span className="text-xs font-black tracking-widest uppercase text-emerald-100/80 bg-white/10 px-3 py-1 rounded-full border border-white/10">
-          About Today&apos;s Aha!
-        </span>
-        <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl leading-tight">
-          매일 배움의 기쁨,<br />오늘의 아하!
+    <article className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-20">
+      <header className="border-b border-slate-200 pb-8 dark:border-slate-800">
+        <p className="text-sm font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">About</p>
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl dark:text-white">
+          오늘의 아하!는 일상 상식을 다시 확인하는 퀴즈 서비스입니다.
         </h1>
-        <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-emerald-50/90 font-medium">
-          오늘의 아하는 매일 하나씩 유익한 상식 퀴즈를 풀어보고, 정답 뒤에 숨겨진 재미있는 원리를 알아가는 퀴즈형 정보 콘텐츠 플랫폼입니다.
+        <p className="mt-5 max-w-3xl text-base font-semibold leading-8 text-slate-600 dark:text-slate-300">
+          오늘의 아하!는 사람들이 자주 믿고 지나가는 상식, 인터넷에서 반복되는 속설, 대화 중 한 번쯤
+          들어본 이야기를 짧은 진실/거짓 퀴즈로 확인하는 콘텐츠 사이트입니다.
         </p>
-      </div>
+      </header>
 
-      {/* 2. Platform Core Values */}
-      <div className="mt-16 grid gap-6 md:grid-cols-3">
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 transition-all hover:shadow-md">
-          <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-          <h2 className="mt-4 text-lg font-black text-slate-950 dark:text-white">쉽고 정확한 정보</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-500 dark:text-slate-400 font-medium">
-            누구나 부담 없이 읽을 수 있는 쉬운 말을 지향합니다. 불필요한 전문 기술 학술 용어는 걷어내고 일상어로 명쾌하게 설명합니다.
+      <section className="mt-10 grid gap-4 md:grid-cols-3">
+        {principles.map((item) => (
+          <div key={item.title} className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-lg font-black text-slate-950 dark:text-white">{item.title}</h2>
+            <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 dark:text-slate-300">{item.body}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-black text-slate-950 dark:text-white">콘텐츠 제작 기준</h2>
+        <div className="mt-5 space-y-4 text-base font-semibold leading-8 text-slate-600 dark:text-slate-300">
+          <p>
+            각 퀴즈는 한 문장으로 판단할 수 있는 주제를 고르고, 정답 이후에는 쉬운 요약과 상세 설명을 제공합니다.
+            상세 설명에는 오해가 생긴 이유, 실제 원리, 일상에서 이해할 포인트를 포함하려고 합니다.
+          </p>
+          <p>
+            건강, 법률, 금융처럼 개인 상황에 따라 판단이 달라질 수 있는 내용은 전문 조언을 대체하지 않습니다.
+            오늘의 아하!는 학습과 흥미를 위한 일반 정보 제공을 목적으로 운영됩니다.
           </p>
         </div>
-        
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 transition-all hover:shadow-md">
-          <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-          </svg>
-          <h2 className="mt-4 text-lg font-black text-slate-950 dark:text-white">사용자 친화적 설계</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-500 dark:text-slate-400 font-medium">
-            복잡한 가입 절차 없이 누구나 바로 문제를 풀고 실시간 피드백을 받을 수 있습니다. 북마크 데이터 역시 브라우저에 안전히 기록됩니다.
-          </p>
-        </div>
+      </section>
 
-        <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 transition-all hover:shadow-md">
-          <svg className="h-8 w-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <h2 className="mt-4 text-lg font-black text-slate-950 dark:text-white">콘텐츠 신뢰성 & SEO</h2>
-          <p className="mt-2 text-sm leading-7 text-slate-500 dark:text-slate-400 font-medium">
-            사용자가 평소에 궁금해할 법한 자연스러운 질문을 테마로 하여 고품질 지식 유입을 돕습니다.
-          </p>
+      <section className="mt-12">
+        <h2 className="text-2xl font-black text-slate-950 dark:text-white">카테고리 구성</h2>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          {categories.map(([title, body]) => (
+            <div key={title} className="rounded-2xl bg-slate-50 p-5 dark:bg-slate-950/50">
+              <h3 className="font-black text-slate-950 dark:text-white">{title}</h3>
+              <p className="mt-2 text-sm font-semibold leading-7 text-slate-600 dark:text-slate-300">{body}</p>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* 3. Categories and Contents Structure */}
-      <div className="mt-16 border-t border-slate-100 pt-16 dark:border-slate-800/60">
-        <h2 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white text-center">
-          우리가 제공하는 상식 테마
-        </h2>
-        <p className="mt-2 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
-          오늘의 아하는 생활, 음식, 동물, 과학 중심의 흥미로운 카테고리를 제공합니다.
+      <section className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+        <h2 className="text-xl font-black text-slate-950 dark:text-white">오류 제보와 문의</h2>
+        <p className="mt-3 text-sm font-semibold leading-7 text-slate-600 dark:text-slate-300">
+          잘못된 설명, 더 나은 표현, 추가하면 좋은 퀴즈 주제가 있다면 언제든 알려주세요. 문의는{" "}
+          <a className="font-black text-emerald-700 underline dark:text-emerald-300" href={`mailto:${siteConfig.contactEmail}`}>
+            {siteConfig.contactEmail}
+          </a>
+          로 받을 수 있습니다.
         </p>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 justify-center">
-          <div className="p-5 border border-slate-100 bg-white rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/40">
-            <span className="text-xs font-black px-2 py-0.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded">생활</span>
-            <h3 className="mt-3 font-extrabold text-slate-900 dark:text-white">일상생활 상식</h3>
-            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
-              충전기 요금, 선풍기 안전, 김 서림 등 가정과 실생활 가전 속의 꿀팁들을 쉽고 아기자기하게 다룹니다.
-            </p>
-          </div>
-
-          <div className="p-5 border border-slate-100 bg-white rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/40">
-            <span className="text-xs font-black px-2 py-0.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded">음식</span>
-            <h3 className="mt-3 font-extrabold text-slate-900 dark:text-white">푸드 & 맛의 원리</h3>
-            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
-              바나나 냉장 보관 갈변 원리, 고기 굽기 마이야르 등 식탁 위 흥미진진한 요리와 맛 상식을 파헤칩니다.
-            </p>
-          </div>
-
-          <div className="p-5 border border-slate-100 bg-white rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/40">
-            <span className="text-xs font-black px-2 py-0.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded">과학</span>
-            <h3 className="mt-3 font-extrabold text-slate-900 dark:text-white">자연 및 물질 과학</h3>
-            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
-              철로 만든 배가 뜨는 원리, 노을과 하늘의 다채로운 파란빛 등 세상 현상의 진짜 원인을 친절하게 전합니다.
-            </p>
-          </div>
-
-          <div className="p-5 border border-slate-100 bg-white rounded-2xl dark:border-slate-800/80 dark:bg-slate-900/40">
-            <span className="text-xs font-black px-2 py-0.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 rounded">동물</span>
-            <h3 className="mt-3 font-extrabold text-slate-900 dark:text-white">반려동물 & 곤충 생태</h3>
-            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
-              고양이가 택배 박스를 사랑하는 속사정, 거미가 자기 거미줄에 걸리지 않는 비밀 등 자연 속 신비를 탐구합니다.
-            </p>
-          </div>
-
-        </div>
-      </div>
+      </section>
     </article>
   );
 }

@@ -13,7 +13,7 @@ create table if not exists public.quizzes (
   slug text unique not null,
   title text not null,
   question text not null,
-  quiz_type text not null check (quiz_type in ('OX', 'MULTIPLE')),
+  quiz_type text not null check (quiz_type in ('TRUE_FALSE')),
   option_1 text not null,
   option_2 text not null,
   option_3 text,

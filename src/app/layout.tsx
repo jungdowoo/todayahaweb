@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import { CookieConsent } from "@/components/CookieConsent";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { CookieConsent } from "@/components/CookieConsent";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { getAdsenseClientId } from "@/lib/adsense";
 import { siteConfig } from "@/lib/seo";
 import "./globals.css";
 
@@ -26,6 +28,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const adsenseClientId = getAdsenseClientId();
+
   return (
     <html lang="ko" className="h-full antialiased" suppressHydrationWarning>
       <head>
@@ -47,6 +51,14 @@ export default function RootLayout({
             `,
           }}
         />
+        {adsenseClientId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
       <body className="flex min-h-full flex-col font-sans">
         <ThemeProvider>

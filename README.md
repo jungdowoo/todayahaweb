@@ -21,7 +21,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ADMIN_PASSWORD=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_CONTACT_EMAIL=jdw9302@naver.com
+ADSENSE_PUBLISHER_ID=
+NEXT_PUBLIC_ADSENSE_SLOT_ID=
 ```
+
+배포 후 AdSense 심사를 요청할 때는 `NEXT_PUBLIC_SITE_URL`을 실제 도메인으로 바꾸고,
+`ADSENSE_PUBLISHER_ID`에는 AdSense에서 발급받은 실제 `pub-...` 값을 넣어야 합니다.
+실제 publisher ID가 없으면 `/ads.txt`는 404를 반환하므로 가짜 값이 노출되지 않습니다.
 
 ## Supabase 설정
 
@@ -45,7 +52,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 - `generateMetadata`로 퀴즈별 title/description/canonical을 생성합니다.
 - `src/app/sitemap.ts`와 `src/app/robots.ts`로 동적 sitemap.xml, robots.txt를 제공합니다.
-- `AdSlot` 컴포넌트는 실제 광고 코드 없이 배치 위치만 제공합니다. 퀴즈 선택 버튼 바로 아래에는 광고를 두지 않았습니다.
+- `AdSlot` 컴포넌트는 실제 AdSense publisher ID와 slot ID가 설정된 경우에만 광고 단위를 렌더링합니다. 값이 없을 때는 광고 placeholder를 노출하지 않습니다.
 
 ## 관리자 MVP
 

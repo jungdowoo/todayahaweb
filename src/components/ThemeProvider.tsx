@@ -11,45 +11,36 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const applyThemeToDocument = (theme: Theme) => {
+  const root = document.documentElement;
+  if (theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    root.classList.add("dark");
+    root.style.colorScheme = "dark";
+  } else {
+    root.classList.remove("dark");
+    root.style.colorScheme = "light";
+  }
+};
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("system");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only access localStorage on client-side mount
-    const savedTheme = (localStorage.getItem("theme") as Theme) || "system";
-    setThemeState(savedTheme);
-    setMounted(true);
+    const timer = window.setTimeout(() => {
+      const savedTheme = (localStorage.getItem("theme") as Theme) || "system";
+      setThemeState(savedTheme);
+      setMounted(true);
+      applyThemeToDocument(savedTheme);
+    }, 0);
 
-    // Apply classes on mount to synchronize with localStorage state
-    const root = document.documentElement;
-    if (
-      savedTheme === "dark" ||
-      (savedTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      root.classList.add("dark");
-      root.style.colorScheme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.style.colorScheme = "light";
-    }
+    return () => window.clearTimeout(timer);
   }, []);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     localStorage.setItem("theme", newTheme);
-
-    const root = document.documentElement;
-    if (
-      newTheme === "dark" ||
-      (newTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      root.classList.add("dark");
-      root.style.colorScheme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.style.colorScheme = "light";
-    }
+    applyThemeToDocument(newTheme);
   };
 
   // Sync with system preference changes if theme is set to 'system'
