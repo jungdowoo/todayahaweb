@@ -17,6 +17,7 @@ export function Footer() {
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 font-semibold">
           <Link href="/about" className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">소개</Link>
+          <Link href="/editorial-policy" className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">편집 원칙</Link>
           <Link href="/privacy" className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">개인정보처리방침</Link>
           <Link href="/terms" className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">이용약관</Link>
           <Link href="/contact" className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">문의하기</Link>

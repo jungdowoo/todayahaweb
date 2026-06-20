@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CategoryCard } from "@/components/CategoryCard";
 import { QuizCard } from "@/components/QuizCard";
 import { getCategories, getLatestQuizzes, getPopularQuizzes, getTodayQuiz } from "@/lib/quizzes";
+import { absoluteUrl } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl("/") },
+};
 
 export default async function Home() {
   const [todayQuiz, popularQuizzes, latestQuizzes, categories] = await Promise.all([

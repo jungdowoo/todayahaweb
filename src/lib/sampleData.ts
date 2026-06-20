@@ -211,6 +211,8 @@ export const categories: Category[] = Array.from(
 export const quizzes: Quiz[] = seedQuizzes.map((seed, index) => {
   const category = categoryMap[seed.category] ?? categoryMap["생활"];
   const [option1 = "", option2 = "", option3 = "", option4 = ""] = seed.options;
+  const genericExample = seed.realLifeExample.includes("이 문장은 검색에서 자주 보이는 상식을 짧게 확인하기 좋습니다");
+  const repeatedMisconception = seed.commonMisunderstanding.trim() === seed.statement.trim();
 
   return {
     id: `seed-${index + 1}`,
@@ -227,8 +229,8 @@ export const quizzes: Quiz[] = seedQuizzes.map((seed, index) => {
     short_explanation: seed.shortAnswer,
     full_explanation: seed.easyExplanation,
     detail_explanation: getEnhancedDetailExplanation(seed.slug, seed.detailExplanation),
-    example_text: seed.realLifeExample,
-    misconception_text: seed.commonMisunderstanding,
+    example_text: genericExample ? null : seed.realLifeExample,
+    misconception_text: repeatedMisconception ? null : seed.commonMisunderstanding,
     aha_point: seed.ahaSummary,
     category_id: category.id,
     category,
@@ -236,7 +238,7 @@ export const quizzes: Quiz[] = seedQuizzes.map((seed, index) => {
     reading_time: seed.estimatedReadTime,
     time_limit_seconds: null,
     tags: seed.keywords,
-    seo_title: `${seed.seoTitle} | 오늘의 아하!`,
+    seo_title: seed.seoTitle,
     seo_description: seed.seoDescription,
     interesting_count: seed.interestingCount ?? 0,
     is_popular: seed.isPopular ?? false,

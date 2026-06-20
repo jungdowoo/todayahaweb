@@ -47,14 +47,25 @@ function TextCard({ title, children }: { title: string; children: ReactNode }) {
 export function ExplanationBlock({ quiz }: { quiz: Quiz }) {
   const easyExplanation = splitParagraphs(quiz.full_explanation);
   const detailExplanation = splitParagraphs(quiz.detail_explanation);
-  const exampleText = splitParagraphs(quiz.example_text);
-  const misconceptionText = splitParagraphs(quiz.misconception_text);
+  const exampleText = splitParagraphs(
+    quiz.example_text?.includes("이 문장은 검색에서 자주 보이는 상식을 짧게 확인하기 좋습니다")
+      ? null
+      : quiz.example_text,
+  );
+  const misconceptionText = splitParagraphs(
+    quiz.misconception_text?.trim() === (quiz.statement ?? quiz.question).trim() ? null : quiz.misconception_text,
+  );
 
   return (
     <section id="answer-guide" className="mt-10 scroll-mt-24 space-y-6" aria-label="정답과 해설">
+      <div className="border-t border-slate-200 pt-8 dark:border-slate-800">
+        <p className="text-sm font-bold leading-7 text-slate-500 dark:text-slate-400">
+          아직 답을 고르지 않았다면 여기서 잠시 멈춰도 좋습니다. 아래에는 정답과 그 이유를 함께 정리했습니다.
+        </p>
+      </div>
       <div className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-800/80 dark:bg-slate-900/60">
         <p className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-          정답과 핵심
+          정답과 핵심 근거
         </p>
         <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-950 dark:text-white">
           정답은 {quiz.correct_answer}입니다.

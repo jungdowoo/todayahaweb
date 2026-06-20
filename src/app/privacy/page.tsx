@@ -1,8 +1,10 @@
-import { siteConfig } from "@/lib/seo";
+import type { Metadata } from "next";
+import { absoluteUrl, siteConfig } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "개인정보처리방침",
   description: "오늘의 아하!의 개인정보, 쿠키, 로컬스토리지, Google AdSense 관련 안내입니다.",
+  alternates: { canonical: absoluteUrl("/privacy") },
 };
 
 export default function PrivacyPage() {

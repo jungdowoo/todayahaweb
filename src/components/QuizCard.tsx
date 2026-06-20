@@ -18,9 +18,11 @@ export function QuizCard({ quiz }: { quiz: Quiz }) {
         <span className="rounded-full border border-slate-200/10 bg-slate-100/80 px-2.5 py-0.5 dark:border-slate-700/20 dark:bg-slate-800/60">
           {quiz.reading_time}분
         </span>
-        <span className="rounded-full border border-emerald-500/10 bg-emerald-50/80 px-2.5 py-0.5 font-extrabold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-          추천 {interestingCount.toLocaleString("ko-KR")}
-        </span>
+        {interestingCount > 0 && (
+          <span className="rounded-full border border-emerald-500/10 bg-emerald-50/80 px-2.5 py-0.5 font-extrabold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+            추천 {interestingCount.toLocaleString("ko-KR")}
+          </span>
+        )}
         {isPopular && (
           <span className="rounded-full border border-rose-500/10 bg-rose-50/80 px-2.5 py-0.5 font-extrabold text-rose-700 dark:bg-rose-950/30 dark:text-rose-400">
             인기

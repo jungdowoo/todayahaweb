@@ -1,8 +1,10 @@
-import { siteConfig } from "@/lib/seo";
+import type { Metadata } from "next";
+import { absoluteUrl, siteConfig } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "이용약관",
   description: "오늘의 아하! 서비스 이용 조건과 콘텐츠 이용 기준을 안내합니다.",
+  alternates: { canonical: absoluteUrl("/terms") },
 };
 
 export default function TermsPage() {

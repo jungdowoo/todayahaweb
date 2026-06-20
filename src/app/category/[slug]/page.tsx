@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { QuizCard } from "@/components/QuizCard";
 import { getCategories, getLatestQuizzes, getPopularQuizzes, getQuizzesByCategory } from "@/lib/quizzes";
+import { absoluteUrl } from "@/lib/seo";
 
 const categoryContent: Record<string, { title: string; intro: string; focus: string[] }> = {
   life: {
@@ -34,6 +36,30 @@ const categoryContent: Record<string, { title: string; intro: string; focus: str
     focus: ["발명과 기술의 역사", "문자와 문화유산", "대중적으로 퍼진 역사 오해"],
   },
 };
+
+export async function generateStaticParams() {
+  const categories = await getCategories();
+  return categories.map((category) => ({ slug: category.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const categories = await getCategories();
+  const category = categories.find((item) => item.slug === slug);
+  if (!category) return {};
+  const content = categoryContent[slug];
+
+  return {
+    title: content?.title ?? category.name + " 퀴즈",
+    description: content?.intro ?? category.description,
+    alternates: { canonical: absoluteUrl("/category/" + slug) },
+    openGraph: {
+      title: content?.title ?? category.name + " 퀴즈",
+      description: content?.intro ?? category.description,
+      url: absoluteUrl("/category/" + slug),
+    },
+  };
+}
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -1,8 +1,10 @@
-import { siteConfig } from "@/lib/seo";
+import type { Metadata } from "next";
+import { absoluteUrl, siteConfig } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "문의하기",
   description: "오늘의 아하! 콘텐츠 오류 제보, 퀴즈 주제 제안, 서비스 문의를 보낼 수 있는 공식 연락처입니다.",
+  alternates: { canonical: absoluteUrl("/contact") },
 };
 
 const inquiryTypes = ["콘텐츠 오류 제보", "퀴즈 주제 제안", "서비스 이용 문의", "광고 및 제휴 문의"];

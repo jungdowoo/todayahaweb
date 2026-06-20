@@ -25,6 +25,32 @@ export const siteConfig = {
 
 export const absoluteUrl = (path: string) => `${siteConfig.url}${path}`;
 
+export const cleanPageTitle = (title: string) => title.replace(/\s*\|\s*오늘의 아하!?\s*$/u, "").trim();
+
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        inLanguage: "ko-KR",
+        publisher: { "@id": `${siteConfig.url}/#organization` },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${siteConfig.url}/#organization`,
+        name: `${siteConfig.name} 편집팀`,
+        url: siteConfig.url,
+        email: siteConfig.contactEmail,
+      },
+    ],
+  };
+}
+
 export function quizJsonLd(quiz: Quiz) {
   return {
     "@context": "https://schema.org",
@@ -32,10 +58,19 @@ export function quizJsonLd(quiz: Quiz) {
     headline: quiz.title,
     description: quiz.seo_description ?? quiz.short_explanation,
     datePublished: quiz.published_at,
+    dateModified: quiz.updated_at ?? quiz.published_at,
+    articleSection: quiz.category?.name,
+    keywords: quiz.tags.join(", "),
+    inLanguage: "ko-KR",
     author: {
       "@type": "Organization",
-      name: siteConfig.name,
+      "@id": `${siteConfig.url}/#organization`,
+      name: `${siteConfig.name} 편집팀`,
     },
-    mainEntityOfPage: absoluteUrl(`/quiz/${quiz.slug}`),
+    publisher: { "@id": `${siteConfig.url}/#organization` },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": absoluteUrl(`/quiz/${quiz.slug}`),
+    },
   };
 }

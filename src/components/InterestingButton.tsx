@@ -92,7 +92,7 @@ export function InterestingButton({ quiz, actions }: { quiz: Quiz; actions?: Rea
         </button>
 
         <div className="flex flex-wrap items-center gap-2 text-sm font-extrabold text-slate-700 dark:text-slate-200">
-          <span>{count.toLocaleString("ko-KR")}개 추천</span>
+          <span>{count > 0 ? count.toLocaleString("ko-KR") + "개 추천" : "첫 추천을 남겨주세요"}</span>
           {isPopular && (
             <span className="rounded-full bg-rose-100 px-2.5 py-1 text-xs text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
               인기퀴즈

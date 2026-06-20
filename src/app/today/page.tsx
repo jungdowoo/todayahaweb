@@ -1,10 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { QuizPlayer } from "@/components/QuizPlayer";
 import { getNextQuiz, getTodayQuiz } from "@/lib/quizzes";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "오늘 퀴즈",
   description: "오늘의 아하!에서 오늘 풀어볼 진실/거짓 생활 상식 퀴즈를 확인해보세요.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default async function TodayPage() {

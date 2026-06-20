@@ -1,8 +1,11 @@
-import { siteConfig } from "@/lib/seo";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { absoluteUrl, siteConfig } from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "오늘의 아하 소개",
   description: "오늘의 아하가 어떤 기준으로 생활 상식 퀴즈를 만들고 운영하는지 소개합니다.",
+  alternates: { canonical: absoluteUrl("/about") },
 };
 
 const principles = [
@@ -62,7 +65,30 @@ export default function AboutPage() {
             건강, 법률, 금융처럼 개인 상황에 따라 판단이 달라질 수 있는 내용은 전문 조언을 대체하지 않습니다.
             오늘의 아하!는 학습과 흥미를 위한 일반 정보 제공을 목적으로 운영됩니다.
           </p>
+          <p>
+            주제 선정, 확인 방법, 수정 절차는{" "}
+            <Link className="font-black text-emerald-700 underline dark:text-emerald-300" href="/editorial-policy">
+              편집 원칙
+            </Link>
+            에 공개합니다. 각 퀴즈에는 게시일과 최근 검토일을 표시합니다.
+          </p>
         </div>
+      </section>
+
+      <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/60">
+        <h2 className="text-2xl font-black text-slate-950 dark:text-white">운영 주체</h2>
+        <dl className="mt-5 grid gap-4 text-sm font-semibold leading-7 text-slate-600 sm:grid-cols-2 dark:text-slate-300">
+          <div>
+            <dt className="font-black text-slate-950 dark:text-white">콘텐츠 운영</dt>
+            <dd>오늘의 아하 편집팀</dd>
+          </div>
+          <div>
+            <dt className="font-black text-slate-950 dark:text-white">공식 연락처</dt>
+            <dd>
+              <a className="underline" href={"mailto:" + siteConfig.contactEmail}>{siteConfig.contactEmail}</a>
+            </dd>
+          </div>
+        </dl>
       </section>
 
       <section className="mt-12">
